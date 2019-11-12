@@ -15,7 +15,7 @@
 - Ubuntu/Windows:
 
 ```bash
-cd SmartParkingLot
+cd Wifi-Indoor-Location
 
 pip install packages/requirements_win_ubuntu.txt
 ```
@@ -23,13 +23,13 @@ pip install packages/requirements_win_ubuntu.txt
 - Mac OS:
 
 ```bash
-cd SmartParkingLot
+cd Wifi-Indoor-Location
 
 pip install packages/requirements_macos.txt
 ```
 
 ```bash
-cd SmartParkingLot/packages/pywifi_macos
+cd Wifi-Indoor-Location/packages/pywifi_macos
 
 pip install .
 ```
@@ -41,7 +41,7 @@ pip install .
 - Run **app.py**
 
 ```bash
-cd SmartParkingLot/source
+cd Wifi-Indoor-Location/source
 
 python app.py
 ```
