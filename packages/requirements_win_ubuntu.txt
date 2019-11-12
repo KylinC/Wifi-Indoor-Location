@@ -1,0 +1,5 @@
+Flask
+redis
+pyquery
+pyobjc
+pywifi
