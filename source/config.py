@@ -13,7 +13,7 @@ API_HOST = '0.0.0.0'
 API_PORT = 5555
 
 # Init AP
-INIT_AP = ["Locate1","Locate1_5G","Locate2","Locate2_5G"]
+INIT_AP = ["Locate1_5G","Locate1","Locate2_5G","Locate2"]
 
 # Redis Database IP
 REDIS_HOST = '127.0.0.1'

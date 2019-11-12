@@ -1,5 +1,5 @@
 """
-    Scan Aim AP Program, https://github.com/KylinC/Wifi-Indoor-Location
+    Scan Aim AP Program, https://kylinchen.top/Wifi-Indoor-Location/
     Kylinchen, www.kylinchen.top, k1017856853@icloud.com
 """
 
