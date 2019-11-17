@@ -99,9 +99,9 @@ class Scanner(object):
         time.sleep(interval)
 
 
+test = Scanner(INIT_AP)
 while(True):
     os.system("networksetup -setairportpower en0 on")
-    test = Scanner(INIT_AP)
     a = test.scan_aim()
     print(a)
     os.system("networksetup -setairportpower en0 off")
