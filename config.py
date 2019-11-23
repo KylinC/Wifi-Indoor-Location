@@ -13,7 +13,7 @@ API_HOST = '0.0.0.0'
 API_PORT = 5555
 
 # Init AP
-INIT_AP = ["Locate2_5G","Locate2","TPLINK_Dafatoo","huanhuan"]
+INIT_AP = ["SJTU2","SJTU2","SJTU2","425-01"]
 
 # Redis Database IP
 REDIS_HOST = '127.0.0.1'

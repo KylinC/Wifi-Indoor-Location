@@ -98,10 +98,10 @@ class Scanner(object):
     def manu_sleep(interval):
         time.sleep(interval)
 
-
-test = Scanner(INIT_AP)
-while(True):
-    os.system("networksetup -setairportpower en0 on")
-    a = test.scan_aim()
-    print(a)
-    os.system("networksetup -setairportpower en0 off")
+if __name__ == "__main__":
+    test = Scanner(INIT_AP)
+    while(True):
+        os.system("networksetup -setairportpower en0 on")
+        a = test.scan_aim()
+        print(a)
+        os.system("networksetup -setairportpower en0 off")
