@@ -6,6 +6,7 @@
 import sys
 import pywifi
 import time
+import os
 
 from config import INIT_AP, INTERFACE
 from exceptionHandler import AP_NOT_EXIST
@@ -100,8 +101,16 @@ class Scanner(object):
 
 if __name__ == "__main__":
     test = Scanner(INIT_AP)
+    result = []
     while(True):
         os.system("networksetup -setairportpower en0 on")
-        a = test.scan_aim()
-        print(a)
+        # time.sleep(2)
+        a = test.scan_all()
+        result.append(a)
+        for ap in a:
+            if ap['ssid']=="SJTU2":
+                print(ap['signal'])
+        # print(a)
         os.system("networksetup -setairportpower en0 off")
+        # if len(result)>=10:
+        #     break
