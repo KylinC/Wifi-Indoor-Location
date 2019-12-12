@@ -12,7 +12,7 @@ from config import INIT_AP, INTERFACE
 from exceptionHandler import AP_NOT_EXIST
 
 class Scanner(object):
-    def __init__(self,init_ap_list=INIT_AP):
+    def __init__(self,init_ap_list=[]):
         self.aplist = init_ap_list
         self.wifi = pywifi.PyWiFi()
         self.iface = self.wifi.interfaces()[0]
@@ -107,10 +107,10 @@ if __name__ == "__main__":
         # time.sleep(2)
         a = test.scan_all()
         result.append(a)
-        for ap in a:
-            if ap['ssid']=="SJTU2":
-                print(ap['signal'])
-        # print(a)
+        # for ap in a:
+        #     if ap['ssid']=="SJTU2":
+        #         print(ap['signal'])
+        print(a)
         os.system("networksetup -setairportpower en0 off")
         # if len(result)>=10:
         #     break
