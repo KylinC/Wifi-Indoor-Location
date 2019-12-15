@@ -73,19 +73,21 @@ class RNNTrainer():
         plot_loss = 0
         print_loss = 0
         all_losses = []
-        optimizer = optim.SGD(self.mlp.parameters(), lr=learning_rate)
+        optimizer = optim.SGD(self.rnn.parameters(), lr=learning_rate)
 
         start = time.time()
         for iter in range(1, n_iters+1):
-            # TODO: 
             optimizer.zero_grad()
             # get a training example
-            signal, room = self.dataset.example()
+            signals, room = self.dataset.sequenceExamples(seqLen=5)
             
             # get prediction and loss
             loss = 0
-            prediction = self.mlp(signal)
-            loss += self.__getNLLLoss(prediction, room)
+            hidden = self.rnn.initHidden()
+            for i in range(signals.shape[0]):
+                input = signals[0]
+                output, hidden = self.rnn(input, hidden)
+            loss += self.__getNLLLoss(output, room)
 
             # update parameter
             loss.backward()

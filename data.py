@@ -29,7 +29,7 @@ class Dataset:
             self.posNames.append(file.split(sep=".")[0])
             data = pd.read_csv(root+file, header=0).values.tolist()
             for item in data:
-                if (not pd.isna(item[0])) and (not item[0] in self.APNames):
+                if (not pd.isna(item[0])) and (not item[0] in self.APNames) and (self.__isEn(item[0])):
                     self.APNames.append(item[0])
 
         # prepare training data
@@ -45,7 +45,7 @@ class Dataset:
         for item in data:
             if pd.isna(item[0]) and pd.isna(item[1]) and pd.isna(item[2]) and pd.isna(item[2]):
                 result.append([])
-            elif (not pd.isna(item[0])) and (item[0] not in self.blackList):
+            elif (not pd.isna(item[0])) and (item[0] not in self.blackList) and (self.__isEn(item[0])):
                 newItem = item[:2]
                 newItem[0] = self.APNames.index(item[0])
                 result[-1].append(newItem)
@@ -63,10 +63,27 @@ class Dataset:
         result[self.posNames.index(pos)] = 1
         return result
 
+    def __isEn(self, name):
+        for c in name:
+            if c<'!' or c>'~':
+                return False
+        return True
+
+
     def example(self, index=None):
         if index==None:
             index = random.randint(0, self.numSamples-1)
         return self.ModelInputs[index], self.ModelOutputs[index]
+
+    def sequenceExamples(self, seqLen = 5):
+        index = random.randint(0, self.numSamples-1)
+        targetInput = self.ModelInputs[index].view(1,1,-1)
+        for i in range(max(index-10, 0), min(index+10, len(self.ModelInputs))):
+            if self.ModelOutputs[i].equal(self.ModelOutputs[index]):
+                targetInput = torch.cat([targetInput, self.ModelInputs[i].view(1,1,-1)], dim=0)
+            if targetInput.shape[0]>=seqLen:
+                return targetInput, self.ModelOutputs[index]
+        
 
     def result2feature(self, result):
         feature = torch.zeros([len(self.APNames)])
