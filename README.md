@@ -1,16 +1,23 @@
-# **Wifi-Indoor-Location**
+# Wifi-Indoor-Location
 
-> SJTU-CS339 Project, Use WiFi RSSI to locate mobile devices indoors.
+> SJTU CS339, Computer Networks, 2019fall 
 
-<img src='https://img.shields.io/badge/python-3.5.7-blue.svg'  align='left' style=' width:100px'/></br>
+https://kylinchen.top/Wifi-Indoor-Location/
 
-<img src='https://img.shields.io/badge/flask-1.1.1-brightgreen'  align='left' style=' width:100px'/></br>
+[![](https://img.shields.io/badge/python-3.5.7-blue.svg)]()
 
-<img src='https://img.shields.io/badge/pyobjc-6.1-red'  align='left' style=' width:100px'/></br>
+[![](https://img.shields.io/badge/Torch-1.0-orange)]()
+
+[![](https://img.shields.io/badge/flask-1.1.1-brightgreen)]()
+
+[![](https://img.shields.io/badge/pyobjc-6.1-red)]()
+
+<br/>
+
+Refers to RSSI fingerprinting and RNN, we've coded a demo to achieve indoor location in our last-summer-merely-destroyed dormetory D19. We also build a 3D front-end to visualize the location result.
 
 
-
-### Environment:
+### Dependency
 
 - Ubuntu/Windows:
 
@@ -34,9 +41,10 @@ cd Wifi-Indoor-Location/packages/pywifi_macos
 pip install .
 ```
 
+**Tips:** Firefox web-browser is recommanded for the demo!
 
 
-### Launch:
+### Launch
 
 - Run **app.py**
 
@@ -46,9 +54,9 @@ cd Wifi-Indoor-Location/source
 python app.py
 ```
 
-- View [http://localhost:5000/](http://localhost:5000/) on Chrome
+- View [http://localhost:5000/](http://localhost:5000/) on **Firefox**
 
-![](http://kylinhub.oss-cn-shanghai.aliyuncs.com/2019-11-12-%E6%88%AA%E5%B1%8F2019-11-12%E4%B8%8B%E5%8D%8810.37.38.png)
+![](http://kylinhub.oss-cn-shanghai.aliyuncs.com/2019-12-16-akk.png)
 
 
 
