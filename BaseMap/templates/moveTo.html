@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- 必须的设置 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8">
+    <title>室内地图视角移动示例|室内三维地图引擎|易景空间地图</title>
+    <meta name="keywords" content="室内地图视角移动示例,室内地图,三维地图引擎,三维地图制作,室内定位,易景空间地图" />
+	<meta name="description" content="室内地图视角移动示例,易景室内三维地图引擎提供地图浏览、缩放、旋转、图层显隐等基础功能，支持自定义室内地图显示风格及样式，可自动绘制楼层热力图、散点图等专题地图，快速进行空间大数据分析展示。支持跨楼层精准的点到点之间的最短、最优路径计算，支持对路径结果进行导航和动画,并提供丰富的地图主题资源供二次开发调用。"/>
+    <style type="text/css">
+        .panel-info {
+            position: absolute;
+            bottom: 5%;
+            left: 2%;
+        }
+        .panel-info label {
+            font-weight: 100;
+        }
+        #moveto{
+            padding: 2px 11px;
+            background-color: #fff;
+            border: none;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+    </style>
+    <link rel="shortcut icon" type="image/ico" href="../image/favicon.ico">
+    <link href="../lib/bootstrap.min.css" rel="stylesheet">
+    <link href="css/common.css" rel="stylesheet">
+    <link href="css/iconfont/iconfont.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <h1><a href="/" title="室内地图-室内三维地图" target="_blank">易景室内三维地图引擎</a> (视角移动示例)</h1>
+            
+            <div class="tips-right">
+                <span class="tip1"></span>
+                <span class="tip2"></span>
+            </div>
+            <div class="tips-msg">
+                <div class="msg msg1">
+                    <div class="erweima"></div>
+                    <p>手机扫一扫进入体验</p>
+                </div>
+                <div class="msg msg2">
+                    <h4>视角移动示例</h4>
+                    <p>1. map.moveTo({x: ..., y: ...}) (墨卡托坐标)为视角移动方法</p>
+                    <div style="display: none">室内地图视角移动示例,易景室内三维地图引擎提供地图浏览、缩放、旋转、图层显隐等基础功能，支持自定义室内地图显示风格及样式，可自动绘制楼层热力图、散点图等专题地图，快速进行空间大数据分析展示。支持跨楼层精准的点到点之间的最短、最优路径计算，支持对路径结果进行导航和动画,并提供丰富的地图主题资源供二次开发调用。</div>
+                </div>
+            </div>
+    
+        </div>
+    </nav>
+
+    <div id="map-container"></div>
+
+    <div id="control-panel" class="panel panel-info">
+        <div class="panel-heading">根据地图坐标移动视角</div>
+        <div class="panel-body">
+            <div class="textbox">
+                <label>x : <input type="textbox" id="x" ></label>
+            </div>
+            <div class="textbox">
+                <label>y : <input type="textbox" id="y" ></label>
+            </div>
+            <div class="textbox">
+                <label>z : <input type="textbox" id="z" ></label>
+            </div>
+            <div class="textbox">
+                <label>楼层 : <input type="textbox" id="fnum"  style="width:140px;"></label>
+            </div>
+            <div class="text-center">
+                <input type="button" id="moveto" value="跳转">
+            </div>
+        </div>
+    </div>
+    <script src="../lib/config.js"></script>
+    <script src="../lib/esmap.min.js"></script>
+    <script src="../lib/jquery-2.1.4.min.js"></script>
+    <script src="../lib/jquery.nicescroll.js"></script>
+    <script src="../lib/jquery.qrcode.min.js"></script>
+    <script src="../lib/tips_controls.js"></script>
+    <script src="../lib/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+        var map;
+        var esmapID = getQueryString('id') || defaultOpt.mapID;
+        var styleid = getQueryString("styleid") || defaultOpt.themeID;
+        var selModel = null;
+        var floorControl, toolControl;
+
+        $(function () {
+            //楼层控制控件配置参数
+            var ctlOpt = new esmap.ESControlOptions({
+                position: esmap.ESControlPositon.RIGHT_BOTTOM,
+                showBtnCount: 7,  //默认显示楼层的个数
+                //位置x,y的偏移量
+                offset: {
+                    x: 20,
+                    y: 10
+                }
+                , imgURL: "image/wedgets/"
+            });
+
+            //放大、缩小控件配置
+            var ctlOpt1 = new esmap.ESControlOptions({
+                position: esmap.ESControlPositon.LEFT_TOP, //位置 左上角
+                //位置x,y的偏移量
+                offset: {
+                    x: 20,
+                    y: 100
+                }
+                , imgURL: "image/wedgets/"
+            });
+
+
+            map = new esmap.ESMap({
+                container: $('#map-container')[0],     //渲染dom
+                mapDataSrc: defaultOpt.mapDataUrl, //地图数据位置
+                mapThemeSrc: defaultOpt.mapThemeUrl, //主题数据位置
+                focusAlphaMode: true,              //对不可见图层启用透明设置 默认为true
+                focusAnimateMode: true,            //开启聚焦层切换的动画显示
+                focusAlpha: 0.9,                     //对不聚焦图层启用透明设置，当focusAlphaMode = true时有效
+                viewModeAnimateMode: true,         //开启2维，3维切换的动画显示
+                defaultScaleLevel: 3,
+                themeID: styleid
+            });
+
+            //打开地图数据
+            map.openMapById(esmapID);//sceneId
+
+            //地图加载完成后回调方法
+            map.on('loadComplete', function () {
+                //创建楼层，放大、缩小控件
+                floorControl = new esmap.ESButtonFloorsControl(map, ctlOpt);
+
+                //保持多层和楼层切换一致
+                floorControl.onChange(function (floors, allLayer) {
+                    //获取当前楼层状态是多层显示(true)还是单层显示(false)
+                    if (toolControl.IsAllFloors()) {
+                        map.visibleFloorNums = map.floorNums;
+                    } else {
+                        map.visibleFloorNums = [map.focusFloorNum];
+                    }
+                    map.focusFloorNum = map.focusFloorNum;
+                });
+                toolControl = new esmap.ESToolControl(map);
+                var zoomControl = new esmap.ESZoomControl(map, ctlOpt1);
+
+                $("#x").attr('value', map.center.x + 10);
+                $("#y").attr('value', map.center.y + 10);
+                $("#z").attr('value', map.getFloor(map.focusFloorNum).floorHeight);
+                $('#fnum').attr('value', map.focusFloorNum);
+            });
+
+
+            map.showCompass = true; //指南针
+
+            //模型拾取事件回调
+            map.on('mapClickNode', function (event) {
+                //console.log('mapClickNode', event);
+                if (event.nodeType == esmap.ESNodeType.NONE || event.nodeType == esmap.ESNodeType.FLOOR) return;
+                if (!event.mapCoord) return;
+                var d = {
+                    nodeType: event.nodeType,
+                    ID: event.ID,
+                    name: event.name,
+                    fnum: event.FloorNum,
+                    x: event.mapCoord.x,
+                    y: event.mapCoord.y,
+                    z: event.mapCoord.z || map.getFloorHeight(event.FloorNum)
+                };
+                console.log(d.x, d.y, d.z)
+                var coord = {
+                    x: d.x,
+                    y: d.y,
+                    z: d.z,
+                    fnum: d.fnum,
+                    time: 0.5
+                };
+                moveTo(coord); //定位跳转
+                $('#x').val(d.x);
+                $('#y').val(d.y);
+                $('#z').val(d.z);
+                $('#fnum').val(d.fnum);
+            });
+
+            //定位跳转
+            $('#moveto').on('click', function () {
+                var coord = {};
+                coord.x = parseFloat($('#x').val());
+                coord.y = parseFloat($('#y').val());
+                coord.z = parseFloat($('#z').val());
+                coord.fnum = parseInt($('#fnum').val());
+                moveTo(coord);
+            });
+
+            //定位跳转
+            function moveTo(coord) {
+                floorControl.changeFocusFloor(coord.fnum);
+                if (toolControl.IsAllFloors()) {
+                    map.moveTo(coord);
+                } else {
+                    map.visibleFloorNums = [coord.fnum];
+                    map.focusFloorNum = coord.fnum;
+                    map.moveTo(coord);
+                }
+            }
+        });
+        
+
+
+    </script>
+
+</body>
+
+</html>

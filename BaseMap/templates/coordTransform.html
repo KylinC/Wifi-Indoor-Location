@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- 必须的设置 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8">
+    <title>室内地图坐标转换示例|室内三维地图引擎|易景空间地图</title>
+    <meta name="keywords" content="室内地图坐标转换示例,室内地图,三维地图引擎,三维地图制作,室内定位,易景空间地图" />
+    <meta name="description" content="室内地图坐标转换示例,易景室内三维地图引擎提供地图浏览、缩放、旋转、图层显隐等基础功能，支持自定义室内地图显示风格及样式，可自动绘制楼层热力图、散点图等专题地图，快速进行空间大数据分析展示。支持跨楼层精准的点到点之间的最短、最优路径计算，支持对路径结果进行导航和动画,并提供丰富的地图主题资源供二次开发调用。" />
+    <link rel="shortcut icon" type="image/ico" href="../image/favicon.ico">
+    <link href="css/common.css" rel="stylesheet">
+    <style type="text/css">
+        #prompt {
+            padding: 10px;
+            background: white;
+            border: 1px solid grey;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <h1><a href="/" title="室内地图-室内三维地图" target="_blank">易景室内三维地图引擎</a> (坐标转换示例) </h1>
+            
+            <div class="tips-right">
+                <span class="tip1"></span>
+                <span class="tip2"></span>
+            </div>
+            <div class="tips-msg">
+                <div class="msg msg1">
+                    <div class="erweima"></div>
+                    <p>手机扫一扫进入体验</p>
+                </div>
+                <div class="msg msg2">
+                    <h4>坐标转换示例</h4>
+                    <p>1. 屏幕坐标通过鼠标移动获取</p>
+                    <p>2. 地图坐标（墨卡托坐标）由屏幕坐标转换而来</p>
+                    <p>3. 经纬度由地图坐标转换而来</p>
+                    <div style="display: none">室内地图坐标转换示例,易景室内三维地图引擎提供地图浏览、缩放、旋转、图层显隐等基础功能，支持自定义室内地图显示风格及样式，可自动绘制楼层热力图、散点图等专题地图，快速进行空间大数据分析展示。支持跨楼层精准的点到点之间的最短、最优路径计算，支持对路径结果进行导航和动画,并提供丰富的地图主题资源供二次开发调用。</div>
+                </div>
+            </div>
+            
+        </div>
+    </nav>
+    <div id="map-container"></div>
+    <!-- 提示信息 -->
+    <div id="prompt">
+    </div>
+    <script src="../lib/config.js"></script>
+    <script src="../lib/esmap.min.js"></script>
+    <script src="../lib/jquery-2.1.4.min.js"></script>
+    <script src="../lib/jquery.qrcode.min.js"></script>
+    <script src="../lib/tips_controls.js"></script>
+    <script type="text/javascript">
+        //定义全局map变量
+        var map = null;
+        var esmapID = getQueryString('id') || defaultOpt.mapID;
+        var styleid = getQueryString("styleid") || defaultOpt.themeID;
+
+        //楼层控制控件配置参数
+        var ctlOpt = new esmap.ESControlOptions({
+            position: esmap.ESControlPositon.RIGHT_BOTTOM, //左下角位置
+            showBtnCount: 7,
+            imgURL: "image/wedgets/"
+        });
+
+        //放大、缩小控件配置
+        var ctlOpt1 = new esmap.ESControlOptions({
+            position: esmap.ESControlPositon.LEFT_TOP, //位置 左上角
+            //位置x,y的偏移量
+            offset: {
+                x: 20,
+                y: 100
+            },
+            imgURL: "image/wedgets/"
+        });
+
+        var floorControl;
+
+        window.onload = function () {
+            var container = document.getElementById('map-container');
+            map = new esmap.ESMap({
+                container: container, //渲染dom
+                mapDataSrc: defaultOpt.mapDataUrl, //地图数据位置
+                mapThemeSrc: defaultOpt.mapThemeUrl, //主题数据位置
+                themeID: styleid,				//样式ID
+            	token:"escope"					//更多初始化参数配置请参考https://www.esmap.cn/escopemap/content/cn/develope/map-config.html
+            });
+            //提示信息
+            var prompt = {
+                show: function (fnum, pt1) {
+                    var div = document.getElementById('prompt');
+
+                    //坐标转换
+                    var pt2 = map.coordScreenToMap(pt1.x, pt1.y, pt1.z);
+                    
+                    if (pt2 != null) { //屏幕到地图坐标可能是没有有意义的一个数字，所以做了范围限制，超出范围则是null！
+                        var pt3 = Mercator2lonLat(pt2.x, pt2.y);
+                        div.innerHTML =
+                            '<p>fnum=' + fnum + ', height=' + pt1.z + '</p>' + '<p>屏幕坐标：x=' + pt1.x +
+                            ', y=' +
+                            pt1.y + '</p>' + '<p>地图坐标：x=' + parseInt(pt2.x) + ', y=' + parseInt(pt2.y) +
+                            '</p>' + '<p>经纬度：lon=' +pt3[0].toFixed(5) + ', lat=' + pt3[1].toFixed(5)  + '</p>';
+                    } else {
+                        div.innerHTML =
+                            '<p>fNum=' + fnum + ', height=' + pt1.z + '</p>' + '<p>屏幕坐标：x=' + pt1.x +
+                            ', y=' +
+                            pt1.y + '</p>' + '<p>地图坐标：超出计算返回</p>' + '<p>屏幕坐标：无效</p>';
+                    }
+                }
+            };
+
+            //打开地图数据
+            map.openMapById(esmapID); //sceneId
+
+            //地图加载完回调事件
+            map.on('loadComplete', function () {
+                //创建楼层，放大、缩小控件
+                floorControl = new esmap.ESButtonFloorsControl(map, ctlOpt);
+                var zoomControl = new esmap.ESZoomControl(map, ctlOpt1);
+                var toolControl = new esmap.ESToolControl(map);
+
+                //保持多层和楼层切换一致
+                floorControl.onChange(function (floors, allLayer) {
+                    //获取当前楼层状态是多层显示(true)还是单层显示(false)
+                    if (toolControl.IsAllFloors()) {
+                        map.visibleFloorNums = map.floorNums;
+                    } else {
+                        map.visibleFloorNums = [map.focusFloorNum];
+                    }
+                    map.focusFloorNum = map.focusFloorNum;
+                });
+
+                container.onmousemove = function (event) {
+                    var currentFid = map.focusFloorNum;
+                    prompt.show(currentFid, {
+                        x: event.clientX,
+                        y: event.clientY,
+                        z: map.getFloorHeight(currentFid)
+                    });
+                }
+            });
+        }
+        //地图坐标转经纬度坐标
+        function Mercator2lonLat(mercatorX, mercatorY) {
+            var xy = [];
+            var x = mercatorX / 20037508.34 * 180;
+            var y = mercatorY / 20037508.34 * 180;
+            y = 180 / Math.PI * (2 * Math.atan(Math.exp(y * Math.PI / 180)) - Math.PI / 2);
+            xy.push(x);
+            xy.push(y);
+            return xy;
+        }
+
+        
+    </script>
+</body>
+
+</html>

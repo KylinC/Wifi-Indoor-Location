@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8">
+    <title>室内地图基本地图示例-获取地图范围|室内三维地图引擎|易景空间地图</title>
+    <meta name="keywords" content="室内地图基本地图示例-获取地图范围,室内地图,三维地图引擎,三维地图制作,室内定位,易景空间地图" />
+    <meta name="description" content="室内地图基本地图示例-获取地图范围,易景室内三维地图引擎提供地图浏览、缩放、旋转、图层显隐等基础功能，支持自定义室内地图显示风格及样式，可自动绘制楼层热力图、散点图等专题地图，快速进行空间大数据分析展示。支持跨楼层精准的点到点之间的最短、最优路径计算，支持对路径结果进行导航和动画,并提供丰富的地图主题资源供二次开发调用。"/>
+    <link rel="shortcut icon" type="image/ico" href="../image/favicon.ico">
+    <link href="../lib/bootstrap.min.css" rel="stylesheet">
+    <link href="css/common.css" rel="stylesheet">
+    <link href="css/iconfont/iconfont.css" rel="stylesheet">
+    <style type="text/css">
+        #control-panel {
+            position: absolute;
+            bottom: 10%;
+            left: 2%;
+            width: 200px;
+        }
+
+        #control-panel span {
+            font-weight: normal;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-inverse">
+        <h1><a href="/" title="室内地图-室内三维地图" target="_blank">易景室内三维地图引擎</a>（基本地图示例-获取地图范围）</h1>
+
+        
+        <div class="tips-right">
+            <span class="tip1"></span>
+            <span class="tip2"></span>
+        </div>
+        <div class="tips-msg">
+            <div class="msg msg1">
+                <div class="erweima"></div>
+                <p>手机扫一扫进入体验</p>
+            </div>
+            <div class="msg msg2">
+                <h4>基本地图示例-获取地图范围</h4>
+                <p>1. maxX/minX maxY/minY 是地图在xy轴的最大/最小值，相减可计算包围盒的长宽</p>
+                
+                <div style="display: none">室内地图基本地图示例-获取地图范围,易景室内三维地图引擎提供地图浏览、缩放、旋转、图层显隐等基础功能，支持自定义室内地图显示风格及样式，可自动绘制楼层热力图、散点图等专题地图，快速进行空间大数据分析展示。支持跨楼层精准的点到点之间的最短、最优路径计算，支持对路径结果进行导航和动画,并提供丰富的地图主题资源供二次开发调用。</div>
+            </div>
+        </div>
+
+    </nav>
+
+    <div id="map-container"></div>
+
+    <!--显示地图范围 -->
+    <div id="control-panel" class="panel panel-info">
+        <div class="panel-heading">当前地图范围:</div>
+        <div class="panel-body">
+            <label>最小X：<span id="minX"></span></label>
+            <label>最小Y：<span id="minY"></span></label>
+            <label>最大X：<span id="maxX"></span></label>
+            <label>最大Y：<span id="maxY"></span></label>
+        </div>
+    </div>
+
+    <script src="../lib/config.js"></script>
+    <script src="../lib/esmap.min.js"></script>
+    <script src="../lib/jquery-2.1.4.min.js"></script>
+    <script src="../lib/jquery.qrcode.min.js"></script>
+    <script src="../lib/tips_controls.js"></script>
+    <script src="../lib/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        //定义全局map变量
+        var map;
+        var esmapID = getQueryString('id') || defaultOpt.mapID;
+        var styleid = getQueryString("styleid") || defaultOpt.themeID;
+        $(function () {
+            map = new esmap.ESMap({
+                container: $('#map-container')[0], //渲染dom
+                mapDataSrc: defaultOpt.mapDataUrl, //地图数据位置
+                mapThemeSrc: defaultOpt.mapThemeUrl, //主题数据位置
+                themeID: styleid,				//样式ID
+            	token:"escope"					//更多初始化参数配置请参考https://www.esmap.cn/escopemap/content/cn/develope/map-config.html
+            });
+
+            //打开地图数据
+            map.openMapById(esmapID);      //sceneId
+
+            map.on('loadComplete', function () {
+                $("#minX").text(map.minX);
+                $("#minY").text(map.minY);
+                $("#maxX").text(map.maxX);
+                $("#maxY").text(map.maxY);
+            });
+        });
+
+
+
+    </script>
+</body>
+
+</html>
