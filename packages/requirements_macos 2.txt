@@ -1,0 +1,6 @@
+Flask
+redis
+pyquery
+pyobjc
+threading
+psutil  
