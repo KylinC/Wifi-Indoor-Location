@@ -49,9 +49,9 @@ pip install .
 - Run **app.py**
 
 ```bash
-cd Wifi-Indoor-Location/source
+cd Wifi-Indoor-Location/src
 
-python app.py
+python run.py
 ```
 
 - View [http://localhost:5000/](http://localhost:5000/) on **Firefox**
