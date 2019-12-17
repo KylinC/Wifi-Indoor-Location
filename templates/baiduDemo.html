@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  <meta charset="UTF-8">
+  <title>百度地图、高德地图跳转室内三维地图示例-室内三维地图引擎|易景空间地图</title>
+  <meta name="keywords" content="百度地图跳转室内三维地图,高德地图跳转室内三维地图,室内地图跳转示例,室内地图,易景空间地图" />
+  <meta name="description"
+    content="百度地图、高德地图跳转室内三维地图示例,室内地图跳转示例,易景室内三维地图引擎提供地图浏览、缩放、旋转、图层显隐等基础功能，支持自定义室内地图显示风格及样式，可自动绘制楼层热力图、散点图等专题地图，快速进行空间大数据分析展示。支持跨楼层精准的点到点之间的最短、最优路径计算，支持对路径结果进行导航和动画,并提供丰富的地图主题资源供二次开发调用。" />
+  <link rel="shortcut icon" type="image/ico" href="../image/favicon.ico">
+  <link href="../lib/bootstrap.min.css" rel="stylesheet">
+  <link href="css/common.css" rel="stylesheet">
+  <link href="css/iconfont/iconfont.css" rel="stylesheet">
+  <style type="text/css">
+    #back {
+      position: absolute;
+      top: 500px;
+      left: 100px;
+      width: 60px;
+      height: 30px;
+      color: black;
+      background-color: #fff;
+      text-align: center;
+      line-height: 30px;
+      font-size: 15px;
+      border: 1px solid #fff;
+      font-family: "微软雅黑";
+      z-index: 1000;
+      cursor: pointer;
+      display: none;
+    }
+
+    /* 跳转样式 */
+    .btn.btn-default {
+      position: absolute;
+      left: 80px;
+      z-index: 1000;
+      cursor: pointer;
+      font: 20px bold;
+      color: rgb(5, 17, 26);
+    }
+
+    #switch {
+      bottom: 5%;
+    }
+
+    #redirect {
+      bottom: 10%;
+    }
+
+    #bmap {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      top: 40px;
+    }
+    #back1,#back2 {
+      position: fixed;
+      top: 45%;
+      left: 50px;
+      font-size: 14px;
+    }
+    .anchorBL{
+      display: none;
+    }
+    .BMap_cpyCtrl.BMap_noprint.anchorBL {
+      display: none;
+    }
+    .none {
+      display: none;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- <div class="loading">
+    <div class="lodingImg"></div>
+  </div> -->
+
+  <nav class="navbar navbar-inverse">
+    <h1><a href="/" title="室内地图-室内三维地图" target="_blank">易景室内三维地图引擎</a> (点击百度地图、高德地图跳转室内三维地图示例)</h1>
+
+    <div class="tips-right">
+      <span class="tip1"></span>
+      <span class="tip2"></span>
+    </div>
+    <div class="tips-msg">
+      <div class="msg msg1">
+        <div class="erweima"></div>
+        <p>手机扫一扫进入体验</p>
+      </div>
+      <div class="msg msg2">
+        <h4>跳转示例</h4>
+        <p>
+          1. 方法1：点击百度地图左边标注使用 iframe网页跳转易景室内空间地图。
+          <br>
+          2. 方法2：点击百度地图右边标注使用 div层本地加载易景室内空间地图。
+        </p>
+        <div style="display: none">
+          点击百度地图、高德地图跳转室内三维地图示例，从第三方地图跳转到易景空间地图示例,易景室内三维地图引擎提供地图浏览、缩放、旋转、图层显隐等基础功能，支持自定义室内地图显示风格及样式，可自动绘制楼层热力图、散点图等专题地图，快速进行空间大数据分析展示。支持跨楼层精准的点到点之间的最短、最优路径计算，支持对路径结果进行导航和动画,并提供丰富的地图主题资源供二次开发调用。
+        </div>
+      </div>
+    </div>
+  </nav>
+
+
+  <div id="map-container" class="none"></div>
+  <div id="bmap"></div>
+  <button id="back1" class="btn btn-default none" onclick="backT()">返回</button>
+
+  <iframe id="page2" width="100%" style="z-index: 999;position: absolute;left:0px;top:-40px;display: none" height="120%" frameborder="0" scrolling="no" src=""></iframe>
+  <button id="back2" class="btn btn-default none" onclick="backT2()">返回</button>
+
+  <script src="../lib/config.js"></script>
+  <script src="../lib/esmap.min.js"></script>
+  <script src="../lib/jquery-2.1.4.min.js"></script>
+  <script src="../lib/jquery.qrcode.min.js"></script>
+  <script src="../lib/tips_controls.js"></script>
+  <script src="../lib/bootstrap.min.js"></script>
+  <script type="text/javascript" src="//api.map.baidu.com/api?v=2.0&amp;ak=s2vlG8KqfKTDljzTL8d526CKUUOT1eHL"></script>
+  <script type="text/javascript">
+    var map; //定义全局map变量
+    var esmapID = getQueryString('id') || defaultOpt.mapID;
+    var styleid = getQueryString("styleid") || defaultOpt.themeID;
+    $(function () {
+      initBMap()
+    })
+
+    //方法2  本地加载地图
+    function initMap() {
+
+      $('#map-container').show();
+      $('#bmap').hide();
+      $('#back1').show();
+      if (!map) {
+        map = new esmap.ESMap({
+          container: $('#map-container')[0], //渲染dom
+          mapDataSrc: defaultOpt.mapDataUrl, //地图数据位置
+          mapThemeSrc: defaultOpt.mapThemeUrl, //主题数据位置
+          themeID: styleid
+        });
+        //打开地图数据
+        map.openMapById(esmapID); //sceneId
+      }
+      
+    }
+
+    //方法1   iframe加载地图
+    function initMap2() {
+      var page2 = $("#page2");
+
+      page2.attr("src", "basic.html?id=10005&styleid=1005"); //跳转第二个页面
+      page2.show(); //显示第二个页面 
+      $('#bmap').hide();
+      $('#back2').show();
+    }
+
+    //加载百度地图
+    function initBMap() {
+      var bmap = new BMap.Map("bmap");
+      bmap.centerAndZoom(new BMap.Point(113.942,22.539), 16);
+      bmap.enableScrollWheelZoom();   //启用滚轮放大缩小，默认禁用
+      bmap.enableContinuousZoom();    //启用地图惯性拖拽，默认禁用
+      var point = new BMap.Point(113.94297398067673,22.542044996065087);
+      var marker = new BMap.Marker(point);  // 创建标注
+      bmap.addOverlay(marker);              // 将标注添加到地图中
+      bmap.centerAndZoom(point, 15);
+
+      var point = new BMap.Point(113.95097398067673,22.547044996065087);
+      var marker2 = new BMap.Marker(point);  // 创建标注
+      bmap.addOverlay(marker2);              // 将标注添加到地图中
+
+      marker.addEventListener("click", function(){          
+        initMap()
+      });
+      marker2.addEventListener("click", function(){          
+        initMap2()
+      });
+
+    }
+    function backT() {
+      $('#map-container').hide();
+      $('#bmap').show();
+      $('#back1').hide();
+    }
+    function backT2() {
+      $('#page2').hide();
+      $('#bmap').show();
+      $('#back2').hide();
+    }
+  </script>
+</body>
+
+</html>

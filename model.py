@@ -27,6 +27,7 @@ class MLP(nn.Module):
 
     def forward(self, Input):
         output = self.mlp(Input.view(1,1,-1))
+        # print("forward")
         output = self.softmax(output.flatten())
         return output
 
@@ -35,12 +36,13 @@ class RNN(nn.Module):
     基本的RNN模型
     input -> (1, numAP)
     '''
-    def __init__(self, input_size, hidden_size, output_size):
+    def __init__(self, input_size, hidden_size, output_size, numLayers=2):
         super(RNN, self).__init__()
         self.hidden_size = hidden_size
-        self.lstm = nn.LSTM(input_size, hidden_size)
+        self.lstm = nn.LSTM(input_size, hidden_size,num_layers=numLayers)
         self.fc = nn.Linear(hidden_size, output_size)
         self.softmax = nn.LogSoftmax(dim=0)
+        self.numLayers=numLayers
 
     def forward(self, input, hidden):
         output, hidden = self.lstm(input.view(1,1,-1), hidden)
@@ -49,7 +51,7 @@ class RNN(nn.Module):
         return output, hidden
 
     def initHidden(self):
-        return (torch.zeros(1, 1, self.hidden_size),torch.zeros(1, 1, self.hidden_size))
+        return (torch.zeros(self.numLayers, 1, self.hidden_size),torch.zeros(self.numLayers, 1, self.hidden_size))
 
 
 if __name__ == "__main__":

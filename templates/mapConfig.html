@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8">
+    <title>室内地图地图配置选项|室内三维地图引擎|易景空间地图</title>
+    <meta name="keywords" content="室内地图地图配置选项,室内地图,三维地图引擎,三维地图制作,室内定位,易景空间地图" />
+    <meta name="description" content="室内地图地图配置选项,易景室内三维地图引擎提供地图浏览、缩放、旋转、图层显隐等基础功能，支持自定义室内地图显示风格及样式，可自动绘制楼层热力图、散点图等专题地图，快速进行空间大数据分析展示。支持跨楼层精准的点到点之间的最短、最优路径计算，支持对路径结果进行导航和动画,并提供丰富的地图主题资源供二次开发调用。" />
+    <link rel="shortcut icon" type="image/ico" href="../image/favicon.ico">
+    <link href="../lib/bootstrap.min.css" rel="stylesheet">
+    <link href="css/common.css" rel="stylesheet">
+    <link href="css/iconfont/iconfont.css" rel="stylesheet">
+    <style>
+        .config-opts{
+            position: absolute;
+            top: 50%;
+            right: 0;
+            margin-top:-175px;
+            z-index: 999;
+            background-color: black;
+            padding: 10px 5px;
+            color: #fff;
+            padding-left: 49px;
+            transition: right 0.8s;
+        }
+        .config-opts .glyphicon-menu-left{
+            display: none;
+        }
+        .opt-toggle{
+            right:-280px;
+        }
+        .opt-toggle .glyphicon-menu-left{
+            display: inline;
+        }
+        .opt-toggle .glyphicon-menu-right{
+            display: none;
+        }
+        .config-opts ul{
+            width: 264px;
+            list-style-type: none;
+            padding-left:10px;
+        }
+        .config-opts ul li span{
+            display: inline-block;
+            width:154px;
+        }
+         div.custom-s{
+                color:#000;
+                display: inline-block;
+                width: 96px;
+                height: 22px;
+                border-radius: 5px;
+                box-shadow: 0 0 5px #ccc;
+                position: relative;
+                right:0;
+            }
+            select{
+                border: none;
+                outline: none;
+                width: 100%;
+                height: 22px;
+                line-height: 22px;
+                appearance: none;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                padding-left: 21px;
+            }
+            .custom-i{
+                color:#000;
+                display: inline-block;
+                width: 96px;
+                height: 22px;
+                border-radius: 5px;
+                box-shadow: 0 0 5px #ccc;
+                position: relative;
+                right:0;
+            }
+            .custom-i input{
+                text-align: left;
+                width: 100%;
+                border: none;
+                outline: none;
+                padding-left: 20px;
+            }
+            div.custom-s:after{
+                content: "";
+                width: 15px;
+                height: 6px;
+                background: url(image/drop_down.png) no-repeat center;
+                position: absolute;
+                right: 7px;
+                top: 35%;
+                pointer-events: none;
+                background-size: 138%;
+            }
+            .config-opts .reopen{
+                width: 125px;
+            }
+            .hide-config{
+                height: 100%;
+                position: absolute;
+                left: 6px;
+                top: 0;
+                line-height: 350px;
+                font-size: 18px;
+                padding: 8px;
+                cursor: pointer;
+            }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse">
+        <h1><a href="/" title="室内地图-室内三维地图" target="_blank">易景室内三维地图引擎</a>（地图配置选项）</h1>
+
+        
+        <div class="tips-right">
+            <span class="tip1"></span>
+            <span class="tip2"></span>
+        </div>
+        <div class="tips-msg">
+            <div class="msg msg1">
+                <div class="erweima"></div>
+                <p>手机扫一扫进入体验</p>
+            </div>
+            <div class="msg msg2">
+                <h4>地图配置选项</h4>
+                <p>1. 配置项将改变地图初始化方式</p>
+                <div style="display: none">室内地图地图配置选项,易景室内三维地图引擎提供地图浏览、缩放、旋转、图层显隐等基础功能，支持自定义室内地图显示风格及样式，可自动绘制楼层热力图、散点图等专题地图，快速进行空间大数据分析展示。支持跨楼层精准的点到点之间的最短、最优路径计算，支持对路径结果进行导航和动画,并提供丰富的地图主题资源供二次开发调用。</div>
+            </div>
+        </div>
+
+    </nav>
+    <div id="map-container"></div>
+    <div class="config-opts">
+        <ul>
+            <li>
+                <span>focusAlphaMode</span>
+                <div class="custom-s">
+                    <select name="" id="">
+                        <option value="true">true</option>
+                        <option value="false">false</option>
+                    </select>
+                </div>
+            </li>
+            <li>
+                <span>focusAnimateMode</span>
+                <div class="custom-s">
+                    <select name="" id="">
+                        <option value="true">true</option>
+                        <option value="false">false</option>
+                    </select>
+                </div>
+            </li>
+            <li>
+                <span>focusAlpha</span>
+                <div class="custom-i">
+                    <input type="text" value="0.1">
+                </div>
+            </li>
+            <li>
+                <span>viewModeAnimateMode</span>
+                <div class="custom-s">
+                    <select name="" id="">
+                        <option value="true">true</option>
+                        <option value="false">false</option>
+                    </select>
+                </div>
+            </li>
+            <li>
+                <span>moveToAnimateMode</span>
+                <div class="custom-s">
+                    <select name="" id="">
+                        <option value="true">true</option>
+                        <option value="false">false</option>
+                    </select>
+                </div>
+            </li>
+            <li>
+                <span>defaultScaleLevel</span>
+                <div class="custom-i">
+                    <input type="text" value="12">
+                </div>
+            </li>
+            <li>
+                <span>modelSelectedEffect</span>
+                <div class="custom-s">
+                    <select name="" id="">
+                        <option value="true">true</option>
+                        <option value="false">false</option>
+                    </select>
+                </div>
+            </li>
+            <li>
+                <span>visibleFloors</span>
+                <div class="custom-i">
+                    <input type="text" value="[1]">
+                </div>
+            </li>
+            <li>
+                <span>focusFloor</span>
+                <div class="custom-s">
+                    <select name="initF" id="">
+                    </select>
+                </div>
+            </li>
+            <li>
+                <span>viewMode</span>
+                <div class="custom-s">
+                    <select name="" id="">
+                        <option value="esmap.ESViewMode.MODE_3D">3D</option>
+                        <option value="esmap.ESViewMode.MODE_2D">2D</option>
+                    </select>
+                </div>
+            </li>
+            <li>
+                <span>themeID</span>
+                <div class="custom-i">
+                    <input type="text" value="1004">
+                </div>
+            </li>
+            <li>
+                <span>defaultControlsPose</span>
+                <div class="custom-s">
+                    <select name="" id="">
+                        <option value="esmap.ESDirection.NORTH">NORTH</option>
+                        <option value="esmap.ESDirection.SOUTH">SOUTH</option>
+                        <option value="esmap.ESDirection.WEST">WEST</option>
+                        <option value="esmap.ESDirection.EAST">EAST</option>
+                        <option value="esmap.ESDirection.SOUTH_EAST">SOUTH_EAST</option>
+                        <option value="esmap.ESDirection.SOUTH_WEST">SOUTH_WEST</option>
+                        <option value="esmap.ESDirection.NORTH_EAST">NORTH_EAST</option>
+                        <option value="esmap.ESDirection.NORTH_WEST">NORTH_WEST</option>
+                    </select>
+                </div>
+            </li>
+            <li>
+                <span>defaultAngle</span>
+                <div class="custom-i">
+                    <input type="text" value="null">
+                </div>
+            </li>
+        </ul>
+        <div style="text-align: center;">
+            <input class="btn btn-default reopen" onclick="reOpen()" value="确定">
+        </div>
+        <div class="hide-config">
+            <span class="glyphicon glyphicon-menu-right"></span>
+            <span class="glyphicon glyphicon-menu-left"></span>
+        </div>
+    </div>
+    <script src="../lib/config.js"></script>
+    <script src="../lib/esmap.min.js"></script>
+    <script src="../lib/jquery-2.1.4.min.js"></script>
+    <script src="../lib/jquery.qrcode.min.js"></script>
+    <script src="../lib/tips_controls.js"></script>
+    <script src="../lib/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        //定义全局map变量
+        var map;
+        var esmapID = getQueryString('id') || defaultOpt.mapID;
+        var styleid = getQueryString("styleid") || defaultOpt.themeID;
+        $(function () {
+            //楼层控制控件配置参数
+            var ctlOpt = new esmap.ESControlOptions({
+                position: esmap.ESControlPositon.RIGHT_BOTTOM,
+                showBtnCount: 7, //默认显示楼层的个数
+                //位置x,y的偏移量
+                offset: {
+                    x: 20,
+                    y: 10
+                },
+                imgURL: "image/wedgets/"
+            });
+
+            //放大、缩小控件配置
+            var ctlOpt1 = new esmap.ESControlOptions({
+                position: esmap.ESControlPositon.LEFT_TOP, //位置 左上角
+                //位置x,y的偏移量
+                offset: {
+                    x: 20,
+                    y: 100
+                },
+                imgURL: "image/wedgets/"
+            });
+            var floorControl, toolControl;
+
+            map = new esmap.ESMap({
+                container: $('#map-container')[0], //渲染dom
+                mapDataSrc: defaultOpt.mapDataUrl, //地图数据位置
+                mapThemeSrc: defaultOpt.mapThemeUrl, //主题数据位置
+                focusAlphaMode: true, //对不可见图层启用透明设置 默认为true
+                focusAnimateMode: true, //开启聚焦层切换的动画显示
+                focusAlpha: 0.1, //对不聚焦图层启用透明设置，当focusAlphaMode = true时有效
+                viewModeAnimateMode: true, //开启2维，3维切换的动画显示
+                moveToAnimateMode: true, //地图定位跳转动画设置
+                defaultScaleLevel: 12, //设置默认显示级别
+                modelSelectedEffect: true, //支持单击模型高亮，false为单击时模型不高亮
+                visibleFloors: [1], //初始显示楼层
+                focusFloor: 1, //初始聚焦楼层
+                viewMode: esmap.ESViewMode.MODE_3D, //初始二维还是三维状态
+                themeID: styleid, //主题ID
+
+                //设置地图默认状态。defaultControlsPose值可为方向枚举、角度值、或特定角度的Json对象的任意一种。如设置二维模式下正北显示：
+                defaultControlsPose: esmap.ESDirection.NORTH //方向枚举型。可设置正南、正北、正东、正西、东南、西南等方向值。具体可参考esmap.ESControlsPoseEnum类。
+                //defaultControlsPose: 90,     //角度值。
+
+                //如果需自定义地图角度，可使用如下JSON对象。此JSON对象用户可根据在浏览器中手动拖动的地图状态，然后在调试界面内使用esmap.ESMapUtil.getControlInfo() 获取。
+                //            defaultControlsPose: {
+                //                target:"66.370,150.000,-38.260",
+                //                position:"66.370,698.433,-38.261"
+                //            }
+            });
+
+            //打开地图数据
+            map.openMapById(esmapID); //sceneId
+
+            map.on('loadComplete', function () {
+                //创建楼层，放大、缩小控件
+                floorControl = new esmap.ESButtonFloorsControl(map, ctlOpt);
+                var zoomControl = new esmap.ESZoomControl(map, ctlOpt1);
+                toolControl = new esmap.ESToolControl(map);
+
+                //保持多层和楼层切换一致
+                floorControl.onChange(function (floors, allLayer) {
+                    if (toolControl.IsAllFloors()) {
+                        map.visibleFloorNums = map.floorNums;
+                    } else {
+                        map.visibleFloorNums = [map.focusFloorNum];
+                    }
+                    map.focusFloorNum = map.focusFloorNum;
+                });
+                var floors = map.floorNums;
+                var sel = $("select[name='initF']");
+                if (sel.children().length == 0) {
+                    floors.forEach(function (f) {
+                        var opt = $("<option value=" + f + ">" + f + "</option>")
+                        sel.append(opt);
+                    });
+                }
+            });
+            //显示指南针
+            map.showCompass = true;
+            $(".hide-config").click(function () {
+                $(".config-opts").toggleClass("opt-toggle");
+            })
+        });
+
+        function reOpen() {
+            var configs = $(".config-opts li");
+            for (var i = 0; i < configs.length; i++) {
+                var config = configs[i];
+                var key = $(config).find("span").text();
+                var value = $(config).children(".custom-i").length != 0 ? $(config).find("input").val() : $(config).find(
+                    "select option:selected").val();
+                value = eval("(" + value + ")");
+                map.options[key] = value;
+            }
+            map.openMapById(esmapID);
+        }
+
+        
+
+    </script>
+</body>
+
+</html>

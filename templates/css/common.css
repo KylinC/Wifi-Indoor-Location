@@ -1,0 +1,292 @@
+﻿html, body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+}
+/* 地图显示区域样式 */
+#map-container {
+    position: absolute;
+    width: 100%;
+    top: 40px;
+    bottom: 0px;
+}
+.navbar-inverse{
+    background-color: #272727;
+}
+nav.navbar{
+    border:none;
+    min-height: 40px;
+    height:40px;
+    border-radius: 0;
+}
+nav.navbar a{
+    text-decoration: none;
+}
+h1{
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+    color:#FFF;
+    line-height: 40px;
+    margin:0;
+}
+h1 a{
+	color:#FFF;
+}
+h1 a:hover{
+	color:#FFF;
+}
+/* 浏览器不兼容webGL 时的提示 */
+.noWebGL {
+    position: fixed;
+    font-family:'Microsoft YaHei';
+    top: 50%;
+    color:rgba(212, 43, 43, 1);
+    margin-top: -60px;
+    padding-left: 40%;
+    background-color:rgba(178, 226, 240, 1);
+    width: 100%;
+    height: 120px;
+    font-weight:100;
+}
+.btn-floor-vertical .btn:focus {
+    outline: none;
+}
+
+/* 楼层按钮 */
+.floor-layer {
+    position: absolute;
+    right: 5px;
+    top: 120px;
+}
+
+.btn-floor-vertical .layer-list > label.btn:first-child {
+    border-radius: 0;
+}
+
+.btn-floor-vertical .layer-list > label.btn:last-child {
+    border-radius: 0;
+}
+/* 缩放按钮组 */
+.zoom-floor {
+    position:absolute;
+    top:240px;
+    left: 2%;
+}
+/* 下拉框样式 */
+.dropdown {
+    position:absolute;
+    top:60px;
+    left: 42%;
+}
+
+/* 视角按钮组 */
+.viewmode-floor {
+    position:absolute;
+    top:240px;
+    left: 2%;
+}
+
+.modal-dialog.bottom {
+    position:absolute;
+    bottom:50px;
+    left:0px;
+    right:0px;
+    margin:auto;
+}
+
+/* 弹出提示框样式 */
+#prompt {
+    position: absolute;
+    bottom: 119px;
+    left: 11px;
+    font-family:Consolas,monospace;
+}
+
+/* 适配手机浏览器样式 */
+@media screen and (min-width: 768px) {
+    .floor-theme {
+        top: 328px;
+    }
+    .floor-zoom {
+        top: 392px;
+    }
+    .viewmode-floor .btn,
+    .btn-floor-vertical .layer-list > label.btn {
+        height: 49px;
+        line-height: 31px;
+    }
+    .layer-list {
+        width: 51px;
+    }
+    #top,
+    #down {
+        height: 28px;
+        line-height: 14px;
+    }
+    #top > i {
+        font-size: 16px;
+    }
+    #down > i {
+        font-size: 16px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .btn {
+        padding: 5px 10px;
+        font-size: 12px;
+        line-height: 1.5;
+        border-radius: 3px;
+    }
+    .btn > i {
+        font-size: 18px;
+    }
+    .floor-theme {
+        top: 288px;
+    }
+    .floor-zoom {
+        top: 342px;
+    }
+    .viewmode-floor .btn,
+    .btn-floor-vertical .layer-list > label.btn {
+        height: 39px;
+        line-height: 29px;
+    }
+    .layer-list {
+        width: 40px;
+    }
+    #top,
+    #down {
+        height: 18px;
+        padding: 0;
+    }
+    #top > i {
+        font-size: 14px;
+    }
+    #down > i {
+        font-size: 14px;
+    }
+}
+
+@keyframes loading
+{
+from {transform: rotate(0deg) translateZ(0);}
+to {transform: rotate(360deg) translateZ(0);}
+}
+
+@-moz-keyframes loading{
+from {-moz-transform: rotate(0deg) translateZ(0);}
+to {-moz-transform: rotate(360deg) translateZ(0);}
+}
+
+@-webkit-keyframes loading 
+{
+from {-webkit-transform: rotate(0deg) translateZ(0);}
+to {-webkit-transform: rotate(360deg) translateZ(0);}
+}
+
+@-o-keyframes loading
+{
+from {-o-transform: rotate(0deg) translateZ(0);}
+to {-o-transform: rotate(360deg) translateZ(0);}
+}
+.loading{
+        position: absolute;
+    height: 40px;
+    line-height: 40px;
+    top: 50%;
+    left: 50%;
+    margin-left: -20px;
+    margin-top: -20px;
+}
+.lodingImg{
+    width: 40px;
+    height: 40px;
+    background:url(../image/loading.png) 0 0 no-repeat;
+    background-size: 40px 40px;
+    animation: loading 3s linear 0s infinite alternate;
+    -moz-animation: loading 3s linear 0s infinite alternate;
+    -o-animation: loading 3s linear 0s infinite alternate;
+    -webkit-animation: loading 3s linear 0s infinite alternate;
+}
+
+/* nav右侧提示、功能介绍 */
+.navbar-inverse .tips-right {
+    /* width: 100px; */
+    height: 40px;
+    position: absolute;
+    right: 10px;
+    top: 0px;
+}
+.navbar-inverse .tips-right:hover {
+    cursor: pointer;
+}
+.navbar-inverse .tips-right .tip1 {
+    display: inline-block;
+    width: 34px;
+    height: 100%;
+    background: url(../../image/erweima.png) no-repeat center;
+    background-size: 60%;
+}
+.navbar-inverse .tips-right .tip2 {
+    display: inline-block;
+    width: 34px;
+    height: 100%;
+    background: url(../../image/wenhao.png) no-repeat center;
+    background-size: 60%;
+}
+.navbar-inverse .tips-msg {
+    overflow: auto
+}
+.navbar-inverse .tips-msg .msg {
+    position: fixed;
+    right: 10px;
+    top: 50px;
+    z-index: 999;
+}
+.navbar-inverse .tips-msg .msg1 {
+    display: none;
+    width: 140px;
+    height: 150px;
+    background: #FFF;
+    border-radius: 6px;
+    border: 2px solid #b0b4b9;
+}
+.navbar-inverse .tips-msg .msg1 canvas {
+    width: 100%;
+    height: 100%;
+}
+.tips-msg .msg1 .erweima {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    margin-top: 10px;
+}
+.tips-msg .msg1 p {
+    font-size: 14px;
+    text-align: center;
+    color: #666;
+    margin-top: 10px;
+}
+.tips-msg .msg2 p {
+    font-size: 14px;
+    /* text-align: center; */
+    color: #666;
+}
+.tips-msg .msg2 h4 {
+    margin: 8px 0;
+    font-size: 15px;
+    color: #636363;
+}
+.navbar-inverse .tips-msg .msg2 {
+    display: none;
+    width: 200px;
+    min-height: 150px;
+    background: #FFF;
+    padding: 5px 8px;
+    border-radius: 6px;
+    border: 2px solid #b0b4b9;
+    overflow-wrap: break-word;
+}
+/* nav提示结束 */

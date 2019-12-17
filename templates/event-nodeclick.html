@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8">
+    <title>室内地图模型拾取示例|室内三维地图引擎|易景空间地图</title>
+    <meta name="keywords" content="室内地图模型拾取示例,室内地图,三维地图引擎,三维地图制作,室内定位,易景空间地图" />
+    <meta name="description" content="室内地图模型拾取示例,易景室内三维地图引擎提供地图浏览、缩放、旋转、图层显隐等基础功能，支持自定义室内地图显示风格及样式，可自动绘制楼层热力图、散点图等专题地图，快速进行空间大数据分析展示。支持跨楼层精准的点到点之间的最短、最优路径计算，支持对路径结果进行导航和动画,并提供丰富的地图主题资源供二次开发调用。"/>
+    <link rel="shortcut icon" type="image/ico" href="../image/favicon.ico">
+    <link href="../lib/bootstrap.min.css" rel="stylesheet">
+    <link href="css/common.css" rel="stylesheet">
+    <style type="text/css">
+    #panel-1 {
+        position: absolute;
+        left: 2%;
+        bottom: 10%;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="map-container"></div>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <h1><a href="/" title="室内地图-室内三维地图" target="_blank">易景室内三维地图引擎</a>（模型拾取示例）</h1>
+        </div>
+    </nav>
+    <div id="panel-1" class="btn-floor-vertical">
+        <button id="btnPick" class="btn btn-default">开启模型拾取</button>
+        <button id="btnPickend" class="btn btn-default">关闭模型拾取</button>
+    </div>
+    <!-- data-backdrop="false" -->
+    <div id="dlgModelInfo" class="modal fade">
+        <div class="modal-dialog bottom">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">模型信息</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-3">楼层</div>
+                            <div class="col-md-9" id="m-fnum"></div>
+                        </div>
+                         <div class="row">
+                            <div class="col-md-3">ID</div>
+                            <div class="col-md-9" id="m-ID"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">typeID</div>
+                            <div class="col-md-9" id="m-type"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">坐标x</div>
+                            <div class="col-md-9" id="m-x"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">坐标y</div>
+                            <div class="col-md-9" id="m-y"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+    <!-- data-backdrop="false" -->
+    <div id="dlgLabellInfo" class="modal fade">
+        <div class="modal-dialog bottom">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">标注信息</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-3">楼层</div>
+                            <div class="col-md-9" id="l-fnum"></div>
+                        </div>
+                          <div class="row">
+                            <div class="col-md-3">ID</div>
+                            <div class="col-md-9" id="l-ID"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">坐标x</div>
+                            <div class="col-md-9" id="l-x"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">坐标y</div>
+                            <div class="col-md-9" id="l-y"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+    <!-- data-backdrop="false" -->
+    <div id="dlgPOIInfo" class="modal fade">
+        <div class="modal-dialog bottom">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">POI信息</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-3">楼层</div>
+                            <div class="col-md-9" id="p-fnum"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">ID</div>
+                            <div class="col-md-9" id="p-ID"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">坐标x</div>
+                            <div class="col-md-9" id="p-x"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">坐标y</div>
+                            <div class="col-md-9" id="p-y"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+    <script src="../lib/config.js"></script>
+    <script src="../lib/esmap.min.js"></script>
+    <script src="../lib/jquery-2.1.4.min.js"></script>
+    <script src="../lib/bootstrap.min.js"></script>
+    <script src="../lib/js/layerFloor.js"></script>
+    
+    <script type="text/javascript">
+    var map = null;
+    var esmapID = getQueryString('id') || defaultOpt.mapID;
+    var styleid = getQueryString("styleid") || defaultOpt.themeID;
+    var selModel = null;
+    $(function() {
+
+        map = new esmap.ESMap({
+            container: $('#map-container')[0], //渲染dom
+            mapDataSrc: defaultOpt.mapDataUrl, //地图数据位置
+            mapThemeSrc: defaultOpt.mapThemeUrl, //主题数据位置
+            themeID: styleid,				//样式ID
+           	token:"escope"					//更多初始化参数配置请参考https://www.esmap.cn/escopemap/content/cn/develope/map-config.html
+       });
+
+        //打开地图数据
+        map.openMapById(esmapID); //sceneId
+        map.showCompass = true;
+
+        //地图加载完成事件
+        map.on('loadComplete', function() {
+            var fnum = map.focusFloorNum;
+            var floorLayer = map.getFloor(fnum);
+            var gpos = floorLayer.mapCoord;
+
+            //添加文本标签图层
+            var layer1 = new esmap.ESLayer("textMarker");
+            var tm = new esmap.ESTextMarker({
+                //x: gpos.x - 30,
+                y: gpos.y - 30,
+                name: "测试标签1",
+                fontsize: 34,
+                fillcolor: "72，61，139", //填充色
+                fontsize: "12.0", //字体大小
+                strokecolor: "255,255,0" //边框色
+            });
+            layer1.addMarker(tm);
+            floorLayer.addLayer(layer1);
+
+            //添加自定义图片标签层
+            var layer = new esmap.ESLayer('imageMarker');
+            var im = new esmap.ESImageMarker({
+                name: '测试ImageMarker',
+                //x: gpos.x + 30,
+                //y: gpos.y - 30,
+                url: 'image/user.png',
+                size: 64
+            });
+            layer.addMarker(im);
+            floorLayer.addLayer(layer);
+        });
+
+        var startPick = false; // 控制是否弹出信息框
+
+        //点击事件
+        map.on('mapClickNode', function(event) {
+            console.log(event);
+            if (event.nodeType == esmap.ESNodeType.NONE || event.nodeType == esmap.ESNodeType.FLOOR) return;
+            var model = event;
+            if (!startPick) return;
+            if(event.nodeType != esmap.ESNodeType.MODEL) 
+                model.o3d_.flash({
+                        scale: 1.3,
+                        time: 0.3
+                    }); //闪烁
+            var d;
+            switch (event.nodeType) {
+                case esmap.ESNodeType.MODEL:
+                    d = {
+                        type: event.typeID,
+                        ID: event.ID,
+                        fnum: event.FloorNum,
+                        name: !event.name ? "暂无" : event.name,
+                        x: event.label ? event.label.mapCoord.x : event.mapCoord.x,
+                        y: event.label ? event.label.mapCoord.y : event.mapCoord.y,
+                        z: event.label ? event.label.mapCoord.z : event.mapCoord.z
+                    };                    
+                    //高亮
+                    map.storeSelect(model);
+                    //model.selectedColor = '#8B008B';
+                    selModel = model;
+                    gui.showModelInfo(d);
+
+                    break; //打开对话框
+                case esmap.ESNodeType.TEXT_MARKER:
+                    d = {
+                        type: event.nodeType,
+                        ID: event.ID,
+                        name: !event.name ? "暂无" : event.name,
+                        fnum: event.FloorNum,
+                        x: event.x,
+                        y: event.y,
+                        z: event.z
+                    };
+                    gui.showLabelInfo(d);
+                    break; //打开对话框
+                case esmap.ESNodeType.FACILITY:
+                case esmap.ESNodeType.IMAGE_MARKER:
+                    {
+                        d = {
+                            type: event.nodeType,
+                            fnum: event.FloorNum,
+                            name: !event.name ? "暂无" : event.name,
+                            ID:event.ID,
+                            x: event.mapCoord.x,
+                            y: event.mapCoord.y,
+                            z: event.mapCoord.z
+                        };
+                        gui.showPOIInfo(d);
+                    };
+                    break;
+            }
+            map.moveTo(d);
+        });
+
+        //开启点击查询
+        $('#btnPick').on('click', function() {
+            startPick = true;
+        });
+
+        //关闭点击查询
+        $('#btnPickend').on('click', function() {
+            startPick = false;
+            map.selectNull();
+        });
+    });
+    </script>
+</body>
+
+</html>

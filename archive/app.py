@@ -1,64 +1,61 @@
-# -*- coding:utf-8 -*-
-
-"""
-    Front-End developed by Echarts, https://kylinchen.top/Wifi-Indoor-Location/
-    Kylinchen, www.kylinchen.top, k1017856853@icloud.com
-"""
-
-import psutil    
-import time
-
-from flask import Flask, render_template, session, request
-from flask_socketio import SocketIO, emit
-
 from scanner import Scanner
-from config import INIT_AP
+from data import Dataset
+import torch
+import os
 
-from threading import Lock
+with torch.no_grad():
+    # mlp version
 
+    mlp = torch.load("result/mlp.pkl")
+    scanner = Scanner()
+    dataset = Dataset()
 
-'''
-Set this variable to "threading", "eventlet" or "gevent" to test the
-different async modes, or leave it set to None for the application to choose
-the best option based on installed packages.
-'''
-async_mode = "threading"
-
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'nilyk'
-socketio = SocketIO(app, async_mode=async_mode)
-
-thread = None
-thread_lock = Lock()
-
-def background_thread():
-    count = 0
-    my_scanner = Scanner()
+    isFirst = True
     while True:
-        socketio.sleep(1.5)
-        count += 1
-        t = time.strftime('%M:%S', time.localtime())
-        result = my_scanner.scan_aim()
-        cpus = []
-        for item in INIT_AP:
-            cpus.append(result[item]["signal"])
-        # print(cpus)
-        socketio.emit('server_response',
-                      {'data': [t] + list(cpus)[0:4], 'count': count},
-                      namespace='/test')
-        # print([t] +list(cpus)[0:4])
-        # print(100*'*')
+        os.system("networksetup -setairportpower en0 on")
+        result = scanner.scan_all()
+        # print(result)
+        feature = dataset.result2feature(result)
+        predict = mlp(feature)
+        pos = dataset.output2pos(predict)
+        if not isFirst:
+            if (lastPos not in dataset.adj2(pos,dist=0)) and (lastPos not in dataset.adj2(pos,dist=1)) and (lastPos not in dataset.adj2(pos,dist=2)):
+                print(pos) 
+                print(lastPos)
+                pos = lastPos
+        else:
+            isFirst = False
 
-@app.route('/')
-def index():
-    return render_template('index.html', async_mode=socketio.async_mode)
+        lastPos = pos
 
-@socketio.on('connect', namespace='/test')
-def test_connect():
-    global thread
-    with thread_lock:
-        if thread is None:
-            thread = socketio.start_background_task(target=background_thread)
+        print("Current Position is : ", pos)
+        os.system("networksetup -setairportpower en0 off")
 
+    # rnn version
 
-socketio.run(app, debug=True)
+    # rnn = torch.load("result/rnn.pkl")
+    # scanner = Scanner()
+    # dataset = Dataset()
+    # seqLen = 5
+
+    # feature = torch.randn([0])
+    # while True:
+    #     os.system("networksetup -setairportpower en0 on")
+    #     result = scanner.scan_all()
+    #     # print(result)
+    #     newFeature = dataset.result2feature(result).view(1,1,-1)
+    #     feature = torch.cat([feature, newFeature], dim=0)
+
+    #     if feature.shape[0]>seqLen:
+    #         feature = feature[1:6]
+    #     if feature.shape[0]<seqLen:
+    #         continue
+
+    #     hidden = rnn.initHidden()
+    #     for i in range(feature.shape[0]):
+    #         input = feature[i]
+    #         output, hidden = rnn(input, hidden)
+
+    #     pos = dataset.output2pos(output)
+    #     print("Current Position is : ", pos)
+    #     os.system("networksetup -setairportpower en0 off")
