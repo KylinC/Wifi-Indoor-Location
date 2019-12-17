@@ -46,7 +46,7 @@ def prediction(feature):
         feature = torch.cat([feature, newFeature], dim=0)
 
         if feature.shape[0]>seqLen:
-            feature = feature[:5]
+            feature = feature[1:6]
         if feature.shape[0]<seqLen:
             return feature,"213"
 
